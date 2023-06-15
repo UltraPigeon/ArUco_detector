@@ -62,7 +62,7 @@ def main():
             a[0].chek_robot(robot, walls, aruco_in_area, a, screen)
             # print(a[0].aruco_height)
         aruco_in_area = sorted(aruco_in_area, reverse=False, key=lambda x: x[1])
-        robot.draw_line(aruco_in_area, screen, robot, level.level_structure)
+        robot.draw_line(aruco_in_area, screen, robot, level.level_structure, camera)
         pg.display.update()  # обновление экрана
 
 

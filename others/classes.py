@@ -14,9 +14,8 @@ wall_color = (0, 0, 0)
 ArUco_color = (255, 0, 0)
 aruco_height = 50
 # параметры экрана
-win_width = 800
-win_height = 500
-
+win_width = 600
+win_height = 600
 
 class Robot(sprite.Sprite):  # класс для спрайта робота
     def __init__(self, x, y):
@@ -69,12 +68,12 @@ class Robot(sprite.Sprite):  # класс для спрайта робота
                 if yvel < 0:  # если движется вверх
                     self.rect.top = w.rect.bottom  # то не движется вверх
 
-    def draw_line(self, target_list, screen, robot, level_h):
+    def draw_line(self, target_list, screen, robot, level_h, camera):
         if len(target_list) >= 2:
             for t in range(2):
                 draw.aaline(screen, (0, 0, 255),
-                            [target_list[t][0][0].rect.center[0], target_list[t][0][0].rect.center[1]],
-                            [robot.rect.center[0], robot.rect.center[1]]
+                            [target_list[t][0][0].rect.center[0] + camera.state[0], target_list[t][0][0].rect.center[1] + camera.state[1]],
+                            [robot.rect.center[0] + camera.state[0], robot.rect.center[1] + camera.state[1]]
                             )
                 if t == 0:
                     text_font = font.Font(None, 40)
@@ -88,8 +87,8 @@ class Robot(sprite.Sprite):  # класс для спрайта робота
                     screen.blit(text1, (10, level_h * wall_length + 50))
         elif len(target_list) == 1:
             draw.aaline(screen, (0, 0, 255),
-                        [target_list[0][0][0].rect.center[0], target_list[0][0][0].rect.center[1]],
-                        [robot.rect.center[0], robot.rect.center[1]]
+                        [target_list[0][0][0].rect.center[0] + camera.state[0], target_list[0][0][0].rect.center[1] + camera.state[1]],
+                        [robot.rect.center[0] + camera.state[0], robot.rect.center[1] + camera.state[1]]
                         )
             text_font = font.Font(None, 40)
             text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {target_list[0][1]} пикелей',
@@ -199,7 +198,7 @@ def camera_configure(camera, target_rect):
 
     l = min(0, l)  # Не движемся дальше левой границы
     l = max(-(camera.width - win_width), l)  # Не движемся дальше правой границы
-    t = max(-(camera.height - win_width), t)  # Не движемся дальше нижней границы
+    # t = max(-(camera.height - win_width), t)  # Не движемся дальше нижней границы
     t = min(0, t)  # Не движемся дальше верхней границы
 
     return Rect(l, t, w, h)
