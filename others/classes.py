@@ -3,8 +3,8 @@ import random
 
 # параметры для отрисовки робота на карте
 bot_speed = 5
-bot_width = 20
-bot_length = 20
+bot_width = 50
+bot_length = 50
 bot_height = 25
 color = (0, 255, 0)
 # параметры для отрисовки стен и маркера
@@ -14,8 +14,9 @@ wall_color = (0, 0, 0)
 ArUco_color = (255, 0, 0)
 aruco_height = 50
 # параметры экрана
-win_width = 600
-win_height = 600
+win_width = 1100
+win_height = 800
+
 
 class Robot(sprite.Sprite):  # класс для спрайта робота
     def __init__(self, x, y):

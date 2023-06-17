@@ -1,118 +1,147 @@
 from others import classes
 import pygame as pg
-# import numpy as np
-# from PIL import Image
-#
-# img = Image.open('image/map.jpg')
-#
-#
-# arr = np.asarray(img, dtype='uint8')
+import xml.etree.ElementTree as et
 
-level_map = [
-    '---------------------------------------------------------------',
-    '-      ^                     ^                                -',
-    '-                                                             -',
-    '-                                            --               -',
-    '-      -----   ---------                     --               -',
-    '-     >-----   ---------                     --               -',
-    '-<     --         ^   --                    >------------------',
-    '-      --<            --                     ------------------',
-    '-      --             --<                                     -',
-    '-                     --                                     >-',
-    '-                    >--                                      -',
-    '-                     --<                                     -',
-    '-      --             --                                      -',
-    '-      --     v       --                 v      v             -',
-    '-      ----------   ----        -------------------------------',
-    '-      ----------   ----        -------------------------------',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-      ---          ---                                       -',
-    '-      ---          ---                                       -',
-    '-      ---          ---                                       -',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-                               ---------------               -',
-    '-                                            --               -',
-    '-      -----   ---------                     --               -',
-    '-     >-----   ---------                     --               -',
-    '-<     --         ^   --                    >------------------',
-    '-      --<            --                     ------------------',
-    '-      --             --<                                     -',
-    '-                     --                                     >-',
-    '-                    >--                                      -',
-    '-                     --<                                     -',
-    '-      --             --                                      -',
-    '-      --             --                 v      v             -',
-    '-      --             --        -------------------------------',
-    '-      --     v       --        -------------------------------',
-    '-      ----------   ----        -------------------------------',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-      ---          ---                                       -',
-    '-      ---          ---                                       -',
-    '-      ---          ---                                       -',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-                               ---------------               -',
-    '-                                            --               -',
-    '-      -----   ---------                     --               -',
-    '-     >-----   ---------                     --               -',
-    '-<     --         ^   --                    >------------------',
-    '-      --<            --                     ------------------',
-    '-      --             --<                                     -',
-    '-      ----------   ----        -------------------------------',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-      ---          ---                                       -',
-    '-      ---          ---                                       -',
-    '-      ---          ---                                       -',
-    '-                               --                            -',
-    '-                               --                            -',
-    '-                               ---------------               -',
-    '-                                            --               -',
-    '-      -----   ---------                     --               -',
-    '-     >-----   ---------                     --               -',
-    '-<     --         ^   --                    >------------------',
-    '-      --<            --                     ------------------',
-    '-      --             --<                                     -',
-    '---------------------------------------------------------------']
-level_structure = len(level_map)
+
+# level_map = [
+#     '---------------------------------------------------------------',
+#     '-      ^                     ^                                -',
+#     '-                                                             -',
+#     '-                                            --               -',
+#     '-      -----   ---------                     --               -',
+#     '-     >-----   ---------                     --               -',
+#     '-<     --         ^   --                    >------------------',
+#     '-      --<            --                     ------------------',
+#     '-      --             --<                                     -',
+#     '-                     --                                     >-',
+#     '-                    >--                                      -',
+#     '-                     --<                                     -',
+#     '-      --             --                                      -',
+#     '-      --     v       --                 v      v             -',
+#     '-      ----------   ----        -------------------------------',
+#     '-      ----------   ----        -------------------------------',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-      ---          ---                                       -',
+#     '-      ---          ---                                       -',
+#     '-      ---          ---                                       -',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-                               ---------------               -',
+#     '-                                            --               -',
+#     '-      -----   ---------                     --               -',
+#     '-     >-----   ---------                     --               -',
+#     '-<     --         ^   --                    >------------------',
+#     '-      --<            --                     ------------------',
+#     '-      --             --<                                     -',
+#     '-                     --                                     >-',
+#     '-                    >--                                      -',
+#     '-                     --<                                     -',
+#     '-      --             --                                      -',
+#     '-      --             --                 v      v             -',
+#     '-      --             --        -------------------------------',
+#     '-      --     v       --        -------------------------------',
+#     '-      ----------   ----        -------------------------------',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-      ---          ---                                       -',
+#     '-      ---          ---                                       -',
+#     '-      ---          ---                                       -',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-                               ---------------               -',
+#     '-                                            --               -',
+#     '-      -----   ---------                     --               -',
+#     '-     >-----   ---------                     --               -',
+#     '-<     --         ^   --                    >------------------',
+#     '-      --<            --                     ------------------',
+#     '-      --             --<                                     -',
+#     '-      ----------   ----        -------------------------------',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-      ---          ---                                       -',
+#     '-      ---          ---                                       -',
+#     '-      ---          ---                                       -',
+#     '-                               --                            -',
+#     '-                               --                            -',
+#     '-                               ---------------               -',
+#     '-                                            --               -',
+#     '-      -----   ---------                     --               -',
+#     '-     >-----   ---------                     --               -',
+#     '-<     --         ^   --                    >------------------',
+#     '-      --<            --                     ------------------',
+#     '-      --             --<                                     -',
+#     '---------------------------------------------------------------']
+# level_structure = len(level_map)
 entities = pg.sprite.Group()
 walls = []  # то, во что мы будем врезаться или опираться
 aruco_markers = []
 x = y = 0  # координаты
 marker_id_count = 1
-for row in level_map:  # вся строка
-    for col in row:  # каждый символ
-        if col == '-':
+# for row in level_map:  # вся строка
+#     for col in row:  # каждый символ
+#         if col == '-':
+#             pf = classes.Wall(x, y)
+#             entities.add(pf)
+#             walls.append(pf)
+#         elif col == '<':
+#             pf = classes.Left(x, y)
+#             entities.add(pf)
+#             aruco_markers.append([pf, marker_id_count])
+#             marker_id_count += 1
+#         elif col == 'v':
+#             pf = classes.Down(x, y)
+#             entities.add(pf)
+#             aruco_markers.append([pf, marker_id_count])
+#             marker_id_count += 1
+#         elif col == '>':
+#             pf = classes.Right(x, y)
+#             entities.add(pf)
+#             aruco_markers.append([pf, marker_id_count])
+#             marker_id_count += 1
+#         elif col == '^':
+#             pf = classes.Up(x, y)
+#             entities.add(pf)
+#             aruco_markers.append([pf, marker_id_count])
+#             marker_id_count += 1
+#         x += classes.wall_width  # блоки платформы ставятся на ширине блоков
+#     y += classes.wall_length  # то же самое и с высотой
+#     x = 0
+
+root = et.parse('others/ctpo.tmx').getroot()
+for tag in root.findall('objectgroup'):  # Get the value from the attribute 'name'
+    value = tag.attrib['name']
+    if value == 'robot':
+        # print(value)
+        for r in tag.findall('object'):
+            x = float(r.attrib['x'])
+            y = float(r.attrib['y'])
+            robot = classes.Robot(x, y)
+            # print(x, y)
+
+    elif value == 'walls':
+        # print(value)
+        for w in tag.findall('object'):
+            x = float(w.attrib['x'])
+            y = float(w.attrib['y'])
             pf = classes.Wall(x, y)
             entities.add(pf)
             walls.append(pf)
-        elif col == '<':
+            # print(x, y)
+
+    elif value == 'arucomarkers':
+        # print(value)
+        for aruc in tag.findall('object'):
+            x = float(aruc.attrib['x'])
+            y = float(aruc.attrib['y'])
             pf = classes.Left(x, y)
             entities.add(pf)
             aruco_markers.append([pf, marker_id_count])
             marker_id_count += 1
-        elif col == 'v':
-            pf = classes.Down(x, y)
-            entities.add(pf)
-            aruco_markers.append([pf, marker_id_count])
-            marker_id_count += 1
-        elif col == '>':
-            pf = classes.Right(x, y)
-            entities.add(pf)
-            aruco_markers.append([pf, marker_id_count])
-            marker_id_count += 1
-        elif col == '^':
-            pf = classes.Up(x, y)
-            entities.add(pf)
-            aruco_markers.append([pf, marker_id_count])
-            marker_id_count += 1
-        x += classes.wall_width  # блоки платформы ставятся на ширине блоков
-    y += classes.wall_length  # то же самое и с высотой
-    x = 0
+            # print(x, y)
+
+
 
