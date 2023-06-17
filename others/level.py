@@ -112,7 +112,7 @@ marker_id_count = 1
 #     x = 0
 
 root = et.parse('others/ctpo.tmx').getroot()
-for tag in root.findall('objectgroup'):  # Get the value from the attribute 'name'
+for tag in root.findall('objectgroup'):
     value = tag.attrib['name']
     if value == 'robot':
         # print(value)
@@ -132,7 +132,7 @@ for tag in root.findall('objectgroup'):  # Get the value from the attribute 'nam
             walls.append(pf)
             # print(x, y)
 
-    elif value == 'arucomarkers':
+    elif value == 'aruc_left':
         # print(value)
         for aruc in tag.findall('object'):
             x = float(aruc.attrib['x'])
@@ -142,6 +142,31 @@ for tag in root.findall('objectgroup'):  # Get the value from the attribute 'nam
             aruco_markers.append([pf, marker_id_count])
             marker_id_count += 1
             # print(x, y)
-
-
+    elif value == 'aruc_right':
+        # print(value)
+        for aruc in tag.findall('object'):
+            x = float(aruc.attrib['x'])
+            y = float(aruc.attrib['y'])
+            pf = classes.Right(x, y)
+            entities.add(pf)
+            aruco_markers.append([pf, marker_id_count])
+            marker_id_count += 1
+    elif value == 'aruc_up':
+        # print(value)
+        for aruc in tag.findall('object'):
+            x = float(aruc.attrib['x'])
+            y = float(aruc.attrib['y'])
+            pf = classes.Up(x, y)
+            entities.add(pf)
+            aruco_markers.append([pf, marker_id_count])
+            marker_id_count += 1
+    elif value == 'aruc_down':
+        # print(value)
+        for aruc in tag.findall('object'):
+            x = float(aruc.attrib['x'])
+            y = float(aruc.attrib['y'])
+            pf = classes.Down(x, y)
+            entities.add(pf)
+            aruco_markers.append([pf, marker_id_count])
+            marker_id_count += 1
 

@@ -69,36 +69,49 @@ class Robot(sprite.Sprite):  # класс для спрайта робота
                 if yvel < 0:  # если движется вверх
                     self.rect.top = w.rect.bottom  # то не движется вверх
 
-    def draw_line(self, target_list, screen, robot, level_h, camera):
+    def draw_distance(self, target_list, screen):
+        if len(target_list) == 1:
+            text_font = font.Font(None, 40)
+            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {(round((target_list[0][1]) / 100, 2)) * 0.9} м',
+                                     True, 'white')
+            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 15, 600, 40))
+            screen.blit(text1, (self.xvel + 20, self.yvel + 20))
+        elif len(target_list) > 1:
+            text_font = font.Font(None, 40)
+            text1 = text_font.render(
+                f'ArUco ID {target_list[0][0][1]} дистанция : {round((target_list[0][1]) / 100, 2)} м',
+                True, 'white')
+            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 15, 600, 40))
+            screen.blit(text1, (self.xvel + 20, self.yvel + 20))
+            text_font = font.Font(None, 40)
+            text1 = text_font.render(
+                f'ArUco ID {target_list[1][0][1]} дистанция : {round((target_list[1][1]) / 100, 2)} м',
+                True, 'white')
+            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 55, 600, 40))
+            screen.blit(text1, (self.xvel + 20, self.yvel + 60))
+        else:
+            text_font = font.Font(None, 40)
+            text1 = text_font.render(
+                f'ArUco маркеров не обнаруженно',
+                True, 'white')
+            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 15, 600, 40))
+            screen.blit(text1, (self.xvel + 20, self.yvel + 20))
+
+    def draw_line(self, target_list, screen, robot, camera):
         if len(target_list) >= 2:
             for t in range(2):
                 draw.aaline(screen, (0, 0, 255),
-                            [target_list[t][0][0].rect.center[0] + camera.state[0], target_list[t][0][0].rect.center[1] + camera.state[1]],
+                            [target_list[t][0][0].rect.center[0] + camera.state[0],
+                             target_list[t][0][0].rect.center[1] + camera.state[1]],
                             [robot.rect.center[0] + camera.state[0], robot.rect.center[1] + camera.state[1]]
                             )
-                if t == 0:
-                    text_font = font.Font(None, 40)
-                    text1 = text_font.render(f'ArUco ID {target_list[t][0][1]} дистанция : {target_list[t][1]} пикселей',
-                                             True, (0, 0, 0))
-                    screen.blit(text1, (10, level_h * wall_length + 10))
-                else:
-                    text_font = font.Font(None, 40)
-                    text1 = text_font.render(f'ArUco ID {target_list[t][0][1]} дистанция : {target_list[t][1]} пикселей',
-                                             True, (0, 0, 0))
-                    screen.blit(text1, (10, level_h * wall_length + 50))
+
         elif len(target_list) == 1:
             draw.aaline(screen, (0, 0, 255),
-                        [target_list[0][0][0].rect.center[0] + camera.state[0], target_list[0][0][0].rect.center[1] + camera.state[1]],
+                        [target_list[0][0][0].rect.center[0] + camera.state[0],
+                         target_list[0][0][0].rect.center[1] + camera.state[1]],
                         [robot.rect.center[0] + camera.state[0], robot.rect.center[1] + camera.state[1]]
                         )
-            text_font = font.Font(None, 40)
-            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {target_list[0][1]} пикелей',
-                                     True, (0, 0, 0))
-            screen.blit(text1, (10, level_h * wall_length + 10))
-        else:
-            text_font = font.Font(None, 40)
-            text1 = text_font.render('Аруко маркеров в поле видимости нет', True, (0, 0, 0))
-            screen.blit(text1, (10, level_h * wall_length + 10))
 
     def seeing_area(self, screen):  # Выводим радиус обзора
         draw.circle(screen, (46, 45, 9),
@@ -118,24 +131,23 @@ class ArUco(Wall):  # подкласс для арукомаркеров
         Wall.__init__(self, x, y)
         self.aruco_height = aruco_height + random.randint(- 20, 20)
 
-    def chek_robot(self, robot, walls, target_list, aruc, screen):
-        v = Vector3(robot.rect.centerx - self.rect.centerx, robot.rect.centery - self.rect.centery,
+    def chek_robot(self, robot, walls, target_list, aruc, screen, camera):
+        v = Vector3(robot.rect.centerx - self.rect.centerx ,
+                    robot.rect.centery - self.rect.centery ,
                     robot.height - aruc[0].aruco_height)
-        # v = Vector2(robot.rect.centerx - self.rect.centerx, robot.rect.centery - self.rect.centery)
         distance_to_marker = v.magnitude()
         z = robot.height - aruc[0].aruco_height
-        distance_to_wall = (distance_to_marker ** 2 - z ** 2 ) ** 0.5
-        if distance_to_wall <= 100:
+        distance_to_wall = (distance_to_marker ** 2 - z ** 2) ** 0.5
+        if distance_to_wall <= 300:
             vision = True
             k = 0
-            x1 = self.rect.centerx
-            y1 = self.rect.centery
+            x1 = float(self.rect.centerx)
+            y1 = float(self.rect.centery)
             while vision:
-            # for i in range(30):
-            #     draw.rect(screen, (250, 250, 0), (x1, y1, 1, 1))
+                # draw.rect(screen, (250, 0, 0), (x1, y1, 2, 2))
                 chek_rect = Rect(x1, y1, 1, 1)
-                x1 = int(0.01 * v.x * k) + x1
-                y1 = int(0.01 * v.y * k) + y1
+                x1 = int(0.005 * v.x * k) + x1
+                y1 = int(0.005 * v.y * k) + y1
                 k += 1
                 for w in walls:
                     if chek_rect.colliderect(w.rect):
@@ -169,7 +181,7 @@ class Right(ArUco):  # подкласс для аруко правых марк�
         ArUco.__init__(self, x, y)
         self.image = Surface((wall_width / 5, wall_length))
         self.image.fill(ArUco_color)
-        self.rect = Rect(x + wall_width * (4 / 5), y, wall_width / 5, wall_length)
+        self.rect = Rect(x + wall_length * (4 / 5), y, wall_width / 5, wall_length)
 
 
 class Up(ArUco):  # подкласс для аруко верхних маркеров
@@ -197,9 +209,9 @@ def camera_configure(camera, target_rect):
     _, _, w, h = camera
     l, t = -l + win_width / 2, -t + win_height / 2
 
-    l = min(0, l)  # Не движемся дальше левой границы
-    l = max(-(camera.width - win_width), l)  # Не движемся дальше правой границы
-    # t = max(-(camera.height - win_width), t)  # Не движемся дальше нижней границы
-    t = min(0, t)  # Не движемся дальше верхней границы
+    # l = min(0, l)  # Не движемся дальше левой границы
+    # l = max(-(camera.width - win_width), l)  # Не движемся дальше правой границы
+    # # t = max(-(camera.height - win_width), t)  # Не движемся дальше нижней границы
+    # t = min(0, t)  # Не движемся дальше верхней границы
 
     return Rect(l, t, w, h)

@@ -9,6 +9,8 @@ bg_color = (255, 255, 255)
 # 1 пиксель равен 3 см
 lvl_h = 156
 lvl_w = 223
+# lvl_h = len(level.level_map)
+# lvl_w = len(level.level_map[0])
 
 
 def main():
@@ -20,10 +22,11 @@ def main():
     timer = pg.time.Clock()
 
     robot = level.robot  # создаем робота по (x,y) координатам
-    left = right = down = up = False  # по умолчанию — стоим
+    # robot = classes.Robot(15, 15)  # создаем робота по (x,y) координатам
+    left = right = down = up = key_dd = False  # по умолчанию — стоим
 
-    total_level_width = 223 * classes.wall_width  # Высчитываем фактическую ширину уровня
-    total_level_height = 156 * classes.wall_length  # высоту
+    total_level_width = lvl_w * classes.wall_width  # Высчитываем фактическую ширину уровня
+    total_level_height = lvl_h * classes.wall_length  # высоту
     camera = classes.Camera(classes.camera_configure, total_level_width, total_level_height)
 
     while 1:
@@ -33,20 +36,24 @@ def main():
                 raise SystemExit
             if e.type == KEYDOWN and e.key == K_LEFT:
                 left = True
-            if e.type == KEYDOWN and e.key == K_RIGHT:
-                right = True
-            if e.type == KEYDOWN and e.key == K_DOWN:
-                down = True
-            if e.type == KEYDOWN and e.key == K_UP:
-                up = True
-            if e.type == KEYUP and e.key == K_RIGHT:
-                right = False
             if e.type == KEYUP and e.key == K_LEFT:
                 left = False
+            if e.type == KEYDOWN and e.key == K_RIGHT:
+                right = True
+            if e.type == KEYUP and e.key == K_RIGHT:
+                right = False
+            if e.type == KEYDOWN and e.key == K_DOWN:
+                down = True
             if e.type == KEYUP and e.key == K_DOWN:
                 down = False
+            if e.type == KEYDOWN and e.key == K_UP:
+                up = True
             if e.type == KEYUP and e.key == K_UP:
                 up = False
+            if e.type == KEYDOWN and e.key == K_d:
+                key_dd = True
+            if e.type == KEYUP and e.key == K_d:
+                key_dd = False
 
         screen.blit(bg, (0, 0))
         # robot.seeing_area(screen)
@@ -61,11 +68,16 @@ def main():
             screen.blit(e.image, camera.apply(e))  # отображение
         aruco_in_area = []
         for a in aruco_markers:
-            a[0].chek_robot(robot, walls, aruco_in_area, a, screen)
+            a[0].chek_robot(robot, walls, aruco_in_area, a, screen, camera)
+
             # print(a[0].aruco_height)
         aruco_in_area = sorted(aruco_in_area, reverse=False, key=lambda x: x[1])
-        robot.draw_line(aruco_in_area, screen, robot, lvl_h, camera)
+        robot.draw_line(aruco_in_area, screen, robot, camera)
+        if key_dd:
+            robot.draw_distance(aruco_in_area, screen)
         pg.display.update()  # обновление экрана
+
+
 
 
 if __name__ == "__main__":
