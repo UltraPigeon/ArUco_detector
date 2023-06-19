@@ -51,9 +51,11 @@ def main():
             if e.type == KEYUP and e.key == K_UP:
                 up = False
             if e.type == KEYDOWN and e.key == K_d:
-                key_dd = True
-            if e.type == KEYUP and e.key == K_d:
-                key_dd = False
+                if key_dd:
+                    key_dd = False
+                else:
+                    key_dd = True
+
 
         screen.blit(bg, (0, 0))
         # robot.seeing_area(screen)
@@ -73,11 +75,11 @@ def main():
             # print(a[0].aruco_height)
         aruco_in_area = sorted(aruco_in_area, reverse=False, key=lambda x: x[1])
         robot.draw_line(aruco_in_area, screen, robot, camera)
+        center_x = robot.rect.centerx + camera.state[0]
+        center_y = robot.rect.centery + camera.state[1]
         if key_dd:
-            robot.draw_distance(aruco_in_area, screen)
+            robot.draw_distance(aruco_in_area, screen, center_x, center_y)
         pg.display.update()  # обновление экрана
-
-
 
 
 if __name__ == "__main__":

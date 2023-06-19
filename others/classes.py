@@ -2,7 +2,7 @@ from pygame import *
 import random
 
 # параметры для отрисовки робота на карте
-bot_speed = 5
+bot_speed = 15
 bot_width = 50
 bot_length = 50
 bot_height = 25
@@ -69,33 +69,36 @@ class Robot(sprite.Sprite):  # класс для спрайта робота
                 if yvel < 0:  # если движется вверх
                     self.rect.top = w.rect.bottom  # то не движется вверх
 
-    def draw_distance(self, target_list, screen):
+    def draw_distance(self, target_list, screen, c_x, c_y):
         if len(target_list) == 1:
+            dist = round(((target_list[0][1]) / 100) * 0.9, 2)
             text_font = font.Font(None, 40)
-            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {(round((target_list[0][1]) / 100, 2)) * 0.9} м',
+            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {dist} м',
                                      True, 'white')
-            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 15, 600, 40))
-            screen.blit(text1, (self.xvel + 20, self.yvel + 20))
+            draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2), 600, 40))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 2))
         elif len(target_list) > 1:
+            dist1 = round(((target_list[0][1]) / 100) * 0.9, 2)
+            dist2 = round(((target_list[0][1]) / 100) * 0.9, 2)
             text_font = font.Font(None, 40)
             text1 = text_font.render(
-                f'ArUco ID {target_list[0][0][1]} дистанция : {round((target_list[0][1]) / 100, 2)} м',
+                f'ArUco ID {target_list[0][0][1]} дистанция : {dist1} м',
                 True, 'white')
-            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 15, 600, 40))
-            screen.blit(text1, (self.xvel + 20, self.yvel + 20))
+            draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2), 600, 40))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 2))
             text_font = font.Font(None, 40)
             text1 = text_font.render(
-                f'ArUco ID {target_list[1][0][1]} дистанция : {round((target_list[1][1]) / 100, 2)} м',
+                f'ArUco ID {target_list[1][0][1]} дистанция : {dist2} м',
                 True, 'white')
-            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 55, 600, 40))
-            screen.blit(text1, (self.xvel + 20, self.yvel + 60))
+            draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2) + 40, 600, 40))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 42))
         else:
             text_font = font.Font(None, 40)
             text1 = text_font.render(
                 f'ArUco маркеров не обнаруженно',
                 True, 'white')
-            draw.rect(screen, ('black'), (self.xvel + 20, self.yvel + 15, 600, 40))
-            screen.blit(text1, (self.xvel + 20, self.yvel + 20))
+            draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2)))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2)))
 
     def draw_line(self, target_list, screen, robot, camera):
         if len(target_list) >= 2:
@@ -130,6 +133,9 @@ class ArUco(Wall):  # подкласс для арукомаркеров
     def __init__(self, x, y):
         Wall.__init__(self, x, y)
         self.aruco_height = aruco_height + random.randint(- 20, 20)
+
+    def draw_id(self):
+        pass
 
     def chek_robot(self, robot, walls, target_list, aruc, screen, camera):
         v = Vector3(robot.rect.centerx - self.rect.centerx ,

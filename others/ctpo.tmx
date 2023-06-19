@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="10" tileheight="10" infinite="1" nextlayerid="13" nextobjectid="4791">
+<map version="1.10" tiledversion="1.10.1" orientation="orthogonal" renderorder="right-down" width="30" height="20" tilewidth="10" tileheight="10" infinite="1" nextlayerid="13" nextobjectid="4796">
  <tileset firstgid="1" source="tiles.tsx"/>
  <layer id="9" name="floor" width="30" height="20">
   <data encoding="csv">
@@ -347,7 +347,7 @@
 </chunk>
    <chunk x="144" y="48" width="16" height="16">
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
-0,0,0,0,4,4,4,4,4,0,0,0,0,0,0,0,
+0,0,0,4,4,4,4,4,4,0,0,0,0,0,0,0,
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,0,4,
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
 4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,4,
@@ -2163,7 +2163,6 @@
   <object id="1740" gid="1" x="1580" y="510" width="10" height="10"/>
   <object id="1741" gid="1" x="1580" y="520" width="10" height="10"/>
   <object id="1742" gid="1" x="1580" y="530" width="10" height="10"/>
-  <object id="1748" gid="1" x="1470" y="500" width="10" height="10"/>
   <object id="1751" gid="1" x="1460" y="500" width="10" height="10"/>
   <object id="1757" gid="1" x="1450" y="500" width="10" height="10"/>
   <object id="1760" gid="1" x="1440" y="500" width="10" height="10"/>
@@ -3329,6 +3328,7 @@
   <object id="4787" gid="2" x="10" y="1370" width="10" height="10"/>
   <object id="4788" gid="2" x="10" y="1050" width="10" height="10"/>
   <object id="4789" gid="2" x="1930" y="1020" width="10" height="10"/>
+  <object id="4795" gid="2" x="1790" y="640" width="10" height="10"/>
  </objectgroup>
  <objectgroup id="10" name="aruc_right">
   <object id="4760" gid="3" x="2210" y="540" width="10" height="10"/>
@@ -3347,6 +3347,8 @@
   <object id="4773" gid="3" x="420" y="1350" width="10" height="10"/>
   <object id="4774" gid="3" x="470" y="960" width="10" height="10"/>
   <object id="4790" gid="3" x="1910" y="1020" width="10" height="10"/>
+  <object id="4791" gid="3" x="2210" y="250" width="10" height="10"/>
+  <object id="4794" gid="3" x="2130" y="760" width="10" height="10"/>
  </objectgroup>
  <objectgroup id="11" name="aruc_up">
   <object id="4742" gid="5" x="2090" y="20" width="10" height="10"/>
@@ -3359,7 +3361,6 @@
   <object id="4749" gid="5" x="840" y="1060" width="10" height="10"/>
   <object id="4750" gid="5" x="560" y="1060" width="10" height="10"/>
   <object id="4751" gid="5" x="260" y="810" width="10" height="10"/>
-  <object id="4752" gid="5" x="90" y="810" width="10" height="10"/>
   <object id="4753" gid="5" x="2150" y="1040" width="10" height="10"/>
   <object id="4754" gid="5" x="1590" y="1050" width="10" height="10"/>
   <object id="4755" gid="5" x="1900" y="750" width="10" height="10"/>
@@ -3387,6 +3388,6 @@
   <object id="4741" gid="6" x="630" y="1230" width="10" height="10"/>
  </objectgroup>
  <objectgroup id="8" name="robot">
-  <object id="4723" gid="8" x="2079" y="217.5" width="10" height="10"/>
+  <object id="4723" gid="8" x="1492.33" y="1152.17" width="10" height="10"/>
  </objectgroup>
 </map>
