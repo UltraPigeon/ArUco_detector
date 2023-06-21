@@ -116,9 +116,9 @@ class Robot(sprite.Sprite):  # класс для спрайта робота
                         [robot.rect.center[0] + camera.state[0], robot.rect.center[1] + camera.state[1]]
                         )
 
-    def seeing_area(self, screen):  # Выводим радиус обзора
-        draw.circle(screen, (46, 45, 9),
-                    (self.rect.centerx, self.rect.centery), 100)
+    def seeing_area(self, screen, c_x, c_y):  # Выводим радиус обзора
+        draw.circle(screen, (44, 45, 56),
+                    (c_x, c_y), 300)
 
 
 class Wall(sprite.Sprite):  # класс для спрайта стены
@@ -134,12 +134,17 @@ class ArUco(Wall):  # подкласс для арукомаркеров
         Wall.__init__(self, x, y)
         self.aruco_height = aruco_height + random.randint(- 20, 20)
 
-    def draw_id(self):
-        pass
+    def draw_id(self, camera, screen, id):
+        x = self.rect.centerx + camera.state[0]
+        y = self.rect.centery + camera.state[1]
+        text_font = font.Font(None, 20)
+        text1 = text_font.render(
+            f'ID : {id}', True, 'red')
+        screen.blit(text1, (x - 20, y - 20))
 
-    def chek_robot(self, robot, walls, target_list, aruc, screen, camera):
-        v = Vector3(robot.rect.centerx - self.rect.centerx ,
-                    robot.rect.centery - self.rect.centery ,
+    def chek_robot(self, robot, walls, target_list, aruc):
+        v = Vector3(robot.rect.centerx - self.rect.centerx,
+                    robot.rect.centery - self.rect.centery,
                     robot.height - aruc[0].aruco_height)
         distance_to_marker = v.magnitude()
         z = robot.height - aruc[0].aruco_height
@@ -160,10 +165,14 @@ class ArUco(Wall):  # подкласс для арукомаркеров
                         vision = False
                         break
                     elif chek_rect.colliderect(robot.rect):
-                        target_aruco = [aruc, round(distance_to_wall, 2)]
+                        distance_to_wall = round(distance_to_wall, 2)
+                        target_aruco = [aruc, distance_to_wall + (distance_to_wall * random.uniform(-0.05, 0.005))]
                         target_list.append(target_aruco)
                         vision = False
                         break
+
+    def triang(self):
+        pass
 
 
 class Left(ArUco):  # подкласс для аруко левых маркеров
@@ -215,9 +224,9 @@ def camera_configure(camera, target_rect):
     _, _, w, h = camera
     l, t = -l + win_width / 2, -t + win_height / 2
 
-    # l = min(0, l)  # Не движемся дальше левой границы
-    # l = max(-(camera.width - win_width), l)  # Не движемся дальше правой границы
-    # # t = max(-(camera.height - win_width), t)  # Не движемся дальше нижней границы
-    # t = min(0, t)  # Не движемся дальше верхней границы
+    # l = min(0, l)
+    # l = max(-(camera.width - win_width), l)
+    # # t = max(-(camera.height - win_width), t)
+    # t = min(0, t)
 
     return Rect(l, t, w, h)
