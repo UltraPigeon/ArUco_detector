@@ -83,7 +83,7 @@ def main():
             screen.blit(e.image, camera.apply(e))
         aruco_in_area = []
         for a in aruco_markers:
-            a[0].chek_robot(robot, walls, aruco_in_area, a)
+            a[0].check_robot(robot, walls, aruco_in_area, a)
         aruco_in_area = sorted(aruco_in_area, reverse=False, key=lambda x: x[1])
         robot.draw_line(aruco_in_area, screen, robot, camera)
         if key_s:

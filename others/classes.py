@@ -1,5 +1,4 @@
 import math
-# from pygame import *
 import pygame as pg
 import random
 
@@ -144,7 +143,7 @@ class ArUco(Wall):  # подкласс для арукомаркеров
             f'ID : {id}', True, 'red')
         screen.blit(text1, (x - 20, y - 20))
 
-    def chek_robot(self, robot, walls, target_list, aruc):
+    def check_robot(self, robot, walls, target_list, aruc):
         v = pg.Vector3(robot.rect.centerx - self.rect.centerx,
                     robot.rect.centery - self.rect.centery,
                     robot.height - aruc[0].aruco_height)
@@ -185,7 +184,6 @@ class ArUco(Wall):  # подкласс для арукомаркеров
         a = round(v.magnitude(), 2)
         c = round(target_list[0][1], 2)
         b = round(target_list[1][1], 2)
-        # angle_a = math.cos((a ** 2 + b ** 2 - c ** 2) / (2 * a * c))
         angle_a = (a ** 2 + b ** 2 - c ** 2) / (2 * a * b)
         k = math.radians(pg.math.Vector2(v).angle_to((v2)))
         v3 = v2
@@ -197,12 +195,6 @@ class ArUco(Wall):  # подкласс для арукомаркеров
         pg.draw.circle(screen, 'grey',
                        (self.rect.centerx + camera.state[0] + v3[0],
                         self.rect.centery + camera.state[1] + v3[1]), 40)
-
-
-
-
-
-        # print(v2)
 
 
 class Left(ArUco):  # подкласс для аруко левых маркеров
