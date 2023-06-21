@@ -20,14 +20,12 @@ def main():
     bg.fill(bg_color)
     timer = pg.time.Clock()
 
-    robot = level.robot  # создаем робота по (x,y) координатам
+    robot = level.robot  # создаем робота из файла level
     # robot = classes.Robot(15, 15)  # создаем робота по (x,y) координатам
     left = right = down = up = key_d = key_s = key_a = key_w = False
-
     total_level_width = lvl_w * classes.wall_width  # Высчитываем фактическую ширину уровня
     total_level_height = lvl_h * classes.wall_length  # высоту
     camera = classes.Camera(classes.camera_configure, total_level_width, total_level_height)
-
     while 1:
         timer.tick(30)
         for e in pg.event.get():
@@ -71,11 +69,9 @@ def main():
                     key_w = True
 
         screen.blit(bg, (0, 0))
-
         entities = level.entities  # Все объекты
         walls = level.walls  # то, во что мы будем врезаться или опираться
         aruco_markers = level.aruco_markers
-
         entities.add(robot)
         robot.update(left, right, down, up, walls)  # передвижение
         camera.update(robot)
@@ -84,7 +80,7 @@ def main():
         if key_a:
             robot.seeing_area(screen, robot_center_x, robot_center_y)
         for e in entities:
-            screen.blit(e.image, camera.apply(e))  # отображение
+            screen.blit(e.image, camera.apply(e))
         aruco_in_area = []
         for a in aruco_markers:
             a[0].chek_robot(robot, walls, aruco_in_area, a)
@@ -93,11 +89,12 @@ def main():
         if key_s:
             for i in aruco_in_area:
                 i[0][0].draw_id(camera, screen, i[0][1])
+
         if key_d:
             robot.draw_distance(aruco_in_area, screen, robot_center_x, robot_center_y)
         if key_w:
-            if len(aruco_in_area) > 2:
-                pass
+            if len(aruco_in_area) > 1:
+                aruco_in_area[0][0][0].triang(aruco_in_area, screen, camera, robot)
         pg.display.update()  # обновление экрана
 
 
