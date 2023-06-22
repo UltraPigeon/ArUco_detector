@@ -72,27 +72,46 @@ class Robot(pg.sprite.Sprite):  # класс для спрайта робота
 
     def draw_distance(self, target_list, screen, c_x, c_y):
         if len(target_list) == 1:
-            dist = round(((target_list[0][1]) / 100) * 0.9, 2)
+            dist1 = round(((target_list[0][1]) / 100) * 0.9, 2)
+            dist2 = round(((target_list[0][2]) / 100) * 0.9, 2)
             text_font = pg.font.Font(None, 40)
-            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {dist} м',
+            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция (реальная) : {dist2} м',
                                      True, 'white')
             pg.draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2), 600, 40))
             screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 2))
+            text_font = pg.font.Font(None, 40)
+            text1 = text_font.render(f'ArUco ID {target_list[0][0][1]} дистанция : {dist1} м',
+                                     True, 'white')
+            pg.draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2) + 40, 600, 40))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 42))
         elif len(target_list) > 1:
-            dist1 = round(((target_list[0][1]) / 100) * 0.9, 2)
-            dist2 = round(((target_list[0][1]) / 100) * 0.9, 2)
+            dist1_1 = round(((target_list[0][1]) / 100) * 0.9, 2)
+            dist2_1 = round(((target_list[1][1]) / 100) * 0.9, 2)
+            dist1_2 = round(((target_list[0][2]) / 100) * 0.9, 2)
+            dist2_2 = round(((target_list[1][2]) / 100) * 0.9, 2)
             text_font = pg.font.Font(None, 40)
             text1 = text_font.render(
-                f'ArUco ID {target_list[0][0][1]} дистанция : {dist1} м',
+                f'ArUco ID {target_list[0][0][1]} дистанция (реальная): {dist1_2} м',
                 True, 'white')
             pg.draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2), 600, 40))
             screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 2))
             text_font = pg.font.Font(None, 40)
             text1 = text_font.render(
-                f'ArUco ID {target_list[1][0][1]} дистанция : {dist2} м',
+                f'ArUco ID {target_list[1][0][1]} дистанция (реальная): {dist2_2} м',
                 True, 'white')
             pg.draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2) + 40, 600, 40))
             screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 42))
+            text1 = text_font.render(
+                f'ArUco ID {target_list[0][0][1]} дистанция: {dist1_1} м',
+                True, 'white')
+            pg.draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2) + 80, 600, 40))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 82))
+            text_font = pg.font.Font(None, 40)
+            text1 = text_font.render(
+                f'ArUco ID {target_list[1][0][1]} дистанция: {dist2_1} м',
+                True, 'white')
+            pg.draw.rect(screen, 'black', (c_x - (win_width / 2), c_y - (win_height / 2) + 120, 600, 40))
+            screen.blit(text1, (c_x - (win_width / 2), c_y - (win_height / 2) + 122))
         else:
             text_font = pg.font.Font(None, 40)
             text1 = text_font.render(
@@ -119,7 +138,7 @@ class Robot(pg.sprite.Sprite):  # класс для спрайта робота
 
     def seeing_area(self, screen, c_x, c_y):  # Выводим радиус обзора
         pg.draw.circle(screen, (44, 45, 56),
-                    (c_x, c_y), 300)
+                       (c_x, c_y), 300)
 
 
 class Wall(pg.sprite.Sprite):  # класс для спрайта стены
@@ -145,8 +164,8 @@ class ArUco(Wall):  # подкласс для арукомаркеров
 
     def check_robot(self, robot, walls, target_list, aruc):
         v = pg.Vector3(robot.rect.centerx - self.rect.centerx,
-                    robot.rect.centery - self.rect.centery,
-                    robot.height - aruc[0].aruco_height)
+                       robot.rect.centery - self.rect.centery,
+                       robot.height - aruc[0].aruco_height)
         distance_to_marker = v.magnitude()
         z = robot.height - aruc[0].aruco_height
         distance_to_wall = (distance_to_marker ** 2 - z ** 2) ** 0.5
@@ -166,7 +185,9 @@ class ArUco(Wall):  # подкласс для арукомаркеров
                         break
                     elif chek_rect.colliderect(robot.rect):
                         distance_to_wall = round(distance_to_wall, 2)
-                        target_aruco = [aruc, distance_to_wall + (distance_to_wall * random.uniform(-0.05, 0.005))]
+                        target_aruco = [aruc,
+                                        distance_to_wall + (distance_to_wall * random.uniform(-0.05, 0.05)),
+                                        distance_to_wall]
                         target_list.append(target_aruco)
                         vision = False
                         break
